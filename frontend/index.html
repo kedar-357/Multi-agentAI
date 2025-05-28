@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Multi-Agent AI System</title>
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #333;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 24px;
+      font-weight: 700;
+    }
+    input[type="file"] {
+      border: 2px dashed #bbb;
+      border-radius: 8px;
+      padding: 16px;
+      width: 300px;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+    input[type="file"]:hover {
+      border-color: #4ccb6c;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #4ccb6c;
+      border: none;
+      color: white;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgb(76 203 108 / 0.3);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background-color: #3da75b;
+      box-shadow: 0 6px 12px rgb(61 167 91 / 0.5);
+    }
+    h2 {
+      margin-top: 40px;
+      color: #2c3e50;
+      font-weight: 700;
+      align-self: flex-start;
+    }
+    pre {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      width: 100%;
+      max-width: 700px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Courier New', Courier, monospace;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .container {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Responsive */
+    @media (max-width: 720px) {
+      input[type="file"] {
+        width: 90%;
+      }
+      pre {
+        max-width: 90%;
+      }
+      button {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload a File (PDF, JSON, or Email TXT)</h1>
+
+  <div class="container">
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">Upload</button>
+
+    <h2>Upload Result</h2>
+    <pre id="output">No upload yet.</pre>
+
+    <button onclick="fetchMemory()">Show In-Memory Uploads</button>
+    <h2>In-Memory Data</h2>
+    <pre id="memoryDisplay">No data yet.</pre>
+  </div>
+
+  <script>
+    async function uploadFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) {
+        alert("Please select a file first.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      document.getElementById("output").innerText = "Uploading...";
+
+      try {
+        const response = await fetch("http://localhost:8000/upload/", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+        document.getElementById("output").innerText = JSON.stringify(result, null, 2);
+      } catch (error) {
+        document.getElementById("output").innerText = "Upload failed: " + error;
+      }
+    }
+
+    async function fetchMemory() {
+      document.getElementById("memoryDisplay").innerText = "Loading memory...";
+
+      try {
+        const response = await fetch("http://localhost:8000/memory/");
+        const data = await response.json();
+        document.getElementById("memoryDisplay").innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById("memoryDisplay").innerText = "Failed to fetch memory: " + err;
+      }
+    }
+  </script>
+</body>
+</html>

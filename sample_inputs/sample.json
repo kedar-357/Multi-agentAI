@@ -1,0 +1,14 @@
+{
+  "result": {
+    "valid": false,
+    "missing_fields": ["urgency"],
+    "extra_fields": ["timestamp"],
+    "structured": {
+      "format": "email",
+      "intent": "request_quote",
+      "sender": "abc@example.com",
+      "urgency": "",
+      "summary": "RFQ"
+    }
+  }
+}
