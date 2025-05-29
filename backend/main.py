@@ -6,7 +6,7 @@ import io
 import json
 import re
 
-GEMINI_API_KEY = "AIzaSyDL5m6vqOBYdND5q0wzdUraAwu4ek293JM"
+GEMINI_API_KEY = "GEMINI_API_KEY"
 configure(api_key=GEMINI_API_KEY)
 
 app = FastAPI()
